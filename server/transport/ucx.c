@@ -429,15 +429,15 @@ static inline void priskv_ucx_handle_cm(int fd, void *opaque, uint32_t ev)
 
     /* #step3, post tag recv */
     uint32_t wr_size = priskv_ucx_wr_size(client);
-    uint8_t *recv_req = client->rmem[PRISKV_TRANSPORT_MEM_REQ].buf;
+    uint8_t *recv_req_buf = client->rmem[PRISKV_TRANSPORT_MEM_REQ].buf;
     for (uint16_t i = 0; i < wr_size; i++) {
-        int recvsize = priskv_ucx_recv_req(client, recv_req);
+        int recvsize = priskv_ucx_recv_req(client, recv_req_buf);
         if (recvsize < 0) {
             status = PRISKV_CM_REJ_STATUS_SERVER_ERROR;
             goto rej;
         }
 
-        recv_req += recvsize;
+        recv_req_buf += recvsize;
     }
 
     /* #step4, initialize KV of client */

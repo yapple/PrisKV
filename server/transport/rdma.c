@@ -885,15 +885,15 @@ static void priskv_rdma_handle_connect_request(struct rdma_cm_event *ev,
     }
 
     /* #step4, post recv all the request commands */
-    uint8_t *recv_req = client->rmem[PRISKV_TRANSPORT_MEM_REQ].buf;
+    uint8_t *recv_req_buf = client->rmem[PRISKV_TRANSPORT_MEM_REQ].buf;
     for (uint16_t i = 0; i < wr_size; i++) {
-        int recvsize = priskv_rdma_recv_req(client, recv_req);
+        int recvsize = priskv_rdma_recv_req(client, recv_req_buf);
         if (recvsize < 0) {
             status = PRISKV_CM_REJ_STATUS_SERVER_ERROR;
             goto rej;
         }
 
-        recv_req += recvsize;
+        recv_req_buf += recvsize;
     }
 
     /* #step5, accept the new client */
